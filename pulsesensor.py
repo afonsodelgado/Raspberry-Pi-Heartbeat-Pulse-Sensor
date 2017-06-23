@@ -7,7 +7,6 @@ import Adafruit_ADS1x115
 class Pulsesensor:
     def __init__(self, channel, gain):
         self.channel = channel
-        self.gain = gain
         self.BPM = 0
         self.adc = Adafruit_ADS1x115.ADS1115()
 
@@ -16,12 +15,11 @@ class Pulsesensor:
         rate = [0] * 10         # array to hold last 10 IBI values
         sampleCounter = 0       # used to determine pulse timing
         lastBeatTime = 0        # used to find IBI
-        #P = 512                 # used to find peak in pulse wave, seeded
-        P = 32768
-        #T = 512                 # used to find trough in pulse wave, seeded
-        T = 32768
-        #thresh = 525          # used to find instant moment of heart beat, seeded
-        thresh = 33600
+        #P = 512                # used to find peak in pulse wave, seeded
+        P = 35200
+        #T = 512                # used to find trough in pulse wave, seeded
+        T = 35200
+        #thresh = 525           # used to find instant moment of heart beat, seeded
         amp = 100               # used to hold amplitude of pulse waveform, seeded
         firstBeat = True        # used to seed rate array so we startup with reasonable BPM
         secondBeat = False      # used to seed rate array so we startup with reasonable BPM
@@ -31,7 +29,7 @@ class Pulsesensor:
         lastTime = int(time.time()*1000)
 
         while not self.thread.stopped:
-            Signal = self.adc.read_adc(self.channel, self.gain)
+            Signal = self.adc.read(self.channel)
             currentTime = int(time.time()*1000)
 
             sampleCounter += currentTime - lastTime
@@ -44,8 +42,8 @@ class Pulsesensor:
                 if Signal < T:                          # T is the trough
                     T = Signal                          # keep track of lowest point in pulse wave
 
-            if Signal > thresh and Signal > P:          # P is the peak
-                P = Signal                              # keep track of pulse peak
+            if Signal > thresh and Signal > P:
+                P = Signal
 
             # signal surges up in value every time there is a pulse
             if N > 250:                                 # avoid high frequency noise
@@ -80,9 +78,12 @@ class Pulsesensor:
                 T = thresh
 
             if N > 2500:                                # if 2.5 seconds go by without a beat
-                thresh = 512                            # set thresh default
-                P = 512                                 # set P default
-                T = 512                                 # set T default
+                #thresh = 512                            # set thresh default
+                thresh = 33600
+                #P = 512                                 # set P default
+                P = 32768
+                #T = 512                                 # set T default
+                T = 32768
                 lastBeatTime = sampleCounter            # bring the lastBeatTime up to date
                 firstBeat = True                        # set these to avoid noise
                 secondBeat = False                      # when we get the heartbeat back
