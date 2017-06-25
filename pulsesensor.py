@@ -16,11 +16,11 @@ class Pulsesensor:
         sampleCounter = 0       # used to determine pulse timing
         lastBeatTime = 0        # used to find IBI
         #P = 512                # used to find peak in pulse wave, seeded
-        P = 600
+        P = 7300
         #T = 512                # used to find trough in pulse wave, seeded
-        T = 600
+        T = 7300
         #thresh = 525           # used to find instant moment of heart beat, seeded
-        thresh = 600
+        thresh = 7300
         amp = 100               # used to hold amplitude of pulse waveform, seeded
         firstBeat = True        # used to seed rate array so we startup with reasonable BPM
         secondBeat = False      # used to seed rate array so we startup with reasonable BPM
@@ -80,11 +80,11 @@ class Pulsesensor:
 
             if N > 2500:                                # if 2.5 seconds go by without a beat
                 #thresh = 512                            # set thresh default
-                thresh = 600
+                thresh = 7300
                 #P = 512                                 # set P default
-                P = 600
+                P = 7300
                 #T = 512                                 # set T default
-                T = 600
+                T = 7300
                 lastBeatTime = sampleCounter            # bring the lastBeatTime up to date
                 firstBeat = True                        # set these to avoid noise
                 secondBeat = False                      # when we get the heartbeat back
